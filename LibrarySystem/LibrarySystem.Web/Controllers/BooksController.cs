@@ -1,17 +1,21 @@
-﻿using LibrarySystem.BusinessObjects;
-using LibrarySystem.DataAccessLayer;
-using LibrarySystem.Web.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Entity;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using LibrarySystem.Web.Models;
+using LibrarySystem.DataAccessLayer;
 
 namespace LibrarySystem.Web.Controllers
 {
     public class BooksController : Controller
     {
         private BookRepository _bookRepo = new BookRepository();
+        private AuthorRepository _authorRepo = new AuthorRepository();
+        private OwnerRepository _ownerRepo = new OwnerRepository();
 
         // GET: Books
         public ActionResult Index()
@@ -22,92 +26,129 @@ namespace LibrarySystem.Web.Controllers
 
             foreach (var book in books)
             {
-                list.Add(new Book
-                {
-                    Id = book.Id,
-                    ISBN = book.ISBN,
-                    countPages = book.countPages,
-                    Name = book.Name,
-                    datePublished = book.datePublished,
-                    Author = new Author { Name = book.Author.Name, Id = book.AuthorId,
-                        Birthdate = book.Author.Birthdate, Gender = book.Author.Gender, isDeleted = book.Author.isDeleted },
-                    Owner = new Owner {  Name = book.Owner.Name, UniqueIdNumber = book.Owner.UniqueIdNumber, PhoneNumber = book.Owner.PhoneNumber,
-                        Email = book.Owner.Email, Address = book.Owner.Address, Gender = book.Owner.Gender}
-                });
+                //book.Author = _authorRepo.Read(book.AuthorId);
+                //book.Owner = _ownerRepo.Read(book.OwnerId);
+                var current = MappingWeb.ConvertToWebEntity(book);
+                current.Author = MappingWeb.ConvertToWebEntity(_authorRepo.Read(book.AuthorId));
+                current.Owner = MappingWeb.ConvertToWebEntity(_ownerRepo.Read(book.OwnerId));
+
+                list.Add(current);
             }
+
             return View(list);
         }
 
         // GET: Books/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Book book = MappingWeb.ConvertToWebEntity(_bookRepo.Read(id));
+            book.Author = MappingWeb.ConvertToWebEntity(_authorRepo.Read(book.AuthorId));
+            book.Owner = MappingWeb.ConvertToWebEntity(_ownerRepo.Read(book.OwnerId));
+
+            if (book == null)
+            {
+                return HttpNotFound();
+            }
+            return View(book);
         }
 
         // GET: Books/Create
         public ActionResult Create()
         {
+            ViewBag.AuthorId = new SelectList(_authorRepo.ReadAll(), "Id", "Name");
+            //ViewBag.OwnerId = new SelectList(_ownerRepo.ReadAll(), "Id", "Name");
             return View();
         }
 
         // POST: Books/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        [ValidateAntiForgeryToken]
+        public ActionResult Create([Bind(Include = "Id,Name,ISBN,countPages,datePublished,AuthorId,OwnerId,isDeleted")] Book book)
         {
-            try
+            if (ModelState.IsValid)
             {
-                // TODO: Add insert logic here
-
+                book.isDeleted = false;
+                book.OwnerId = 4;
+                book.Author = MappingWeb.ConvertToWebEntity(_authorRepo.Read(book.AuthorId));
+                book.Owner = MappingWeb.ConvertToWebEntity(_ownerRepo.Read(book.OwnerId));
+                _bookRepo.Create(MappingWeb.ConvertToBusinessEntity(book));
                 return RedirectToAction("Index");
             }
-            catch
-            {
-                return View();
-            }
+
+
+            ViewBag.AuthorId = new SelectList(_authorRepo.ReadAll(), "Id", "Name", book.AuthorId);
+            ViewBag.OwnerId = new SelectList(_ownerRepo.ReadAll(), "Id", "Name", book.OwnerId);
+
+            return View(book);
         }
 
         // GET: Books/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Book book = MappingWeb.ConvertToWebEntity(_bookRepo.Read(id));
+            if (book == null)
+            {
+                return HttpNotFound();
+            }
+            ViewBag.AuthorId = new SelectList(_authorRepo.ReadAll(), "Id", "Name", book.AuthorId);
+            ViewBag.OwnerId = new SelectList(_ownerRepo.ReadAll(), "Id", "Name", book.OwnerId);
+            return View(book);
         }
 
         // POST: Books/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit([Bind(Include = "Id,Name,ISBN,countPages,datePublished,AuthorId,OwnerId,isDeleted")] Book book)
         {
-            try
+            if (ModelState.IsValid)
             {
-                // TODO: Add update logic here
-
+                _bookRepo.Update(MappingWeb.ConvertToBusinessEntity(book));
                 return RedirectToAction("Index");
             }
-            catch
-            {
-                return View();
-            }
+            ViewBag.AuthorId = new SelectList(_authorRepo.ReadAll(), "Id", "Name", book.AuthorId);
+            ViewBag.OwnerId = new SelectList(_ownerRepo.ReadAll(), "Id", "Name", book.OwnerId);
+            return View(book);
         }
 
         // GET: Books/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Book book = MappingWeb.ConvertToWebEntity(_bookRepo.Read(id));
+            book.Author = MappingWeb.ConvertToWebEntity(_authorRepo.Read(book.AuthorId));
+            book.Owner = MappingWeb.ConvertToWebEntity(_ownerRepo.Read(book.OwnerId));
+
+            if (book == null)
+            {
+                return HttpNotFound();
+            }
+            return View(book);
         }
 
         // POST: Books/Delete/5
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(int id)
         {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
+            Book book = MappingWeb.ConvertToWebEntity(_bookRepo.Read(id));
+            _bookRepo.Delete(MappingWeb.ConvertToBusinessEntity(book));
+            return RedirectToAction("Index");
         }
+
     }
 }

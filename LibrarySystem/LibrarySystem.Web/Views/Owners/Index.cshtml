@@ -1,4 +1,4 @@
-﻿@model IEnumerable<LibrarySystem.Web.Models.Book>
+﻿@model IEnumerable<LibrarySystem.Web.Models.Owner>
 
 @{
     ViewBag.Title = "Index";
@@ -11,24 +11,23 @@
 </p>
 <table class="table">
     <tr>
-       
         <th>
             @Html.DisplayNameFor(model => model.Name)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.ISBN)
+            @Html.DisplayNameFor(model => model.UniqueIdNumber)
         </th>
         <th>
-            @Html.Label("Page count")
+            @Html.DisplayNameFor(model => model.Address)
         </th>
         <th>
-            @Html.Label("Publishing date")
+            @Html.DisplayNameFor(model => model.Gender)
         </th>
         <th>
-            @Html.Label("Author Name")
+            @Html.DisplayNameFor(model => model.PhoneNumber)
         </th>
         <th>
-            @Html.Label("Owner name")
+            @Html.DisplayNameFor(model => model.Email)
         </th>
         @*<th>
             @Html.DisplayNameFor(model => model.isDeleted)
@@ -38,24 +37,23 @@
 
 @foreach (var item in Model) {
     <tr>
-        
         <td>
             @Html.DisplayFor(modelItem => item.Name)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.ISBN)
+            @Html.DisplayFor(modelItem => item.UniqueIdNumber)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.countPages)
+            @Html.DisplayFor(modelItem => item.Address)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.datePublished)
+            @Html.DisplayFor(modelItem => item.Gender)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Author.Name)
+            @Html.DisplayFor(modelItem => item.PhoneNumber)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Owner.Name)
+            @Html.DisplayFor(modelItem => item.Email)
         </td>
         @*<td>
             @Html.DisplayFor(modelItem => item.isDeleted)

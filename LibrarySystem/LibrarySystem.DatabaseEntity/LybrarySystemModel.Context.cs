@@ -29,10 +29,5 @@ namespace LibrarySystem.DatabaseEntity
         public virtual DbSet<Book> Book { get; set; }
         public virtual DbSet<Owner> Owner { get; set; }
 
-        //public System.Data.Entity.DbSet<LibrarySystem.Web.Models.Book> Books { get; set; }
-
-        //public System.Data.Entity.DbSet<LibrarySystem.Web.Models.Author> Authors { get; set; }
-
-        //public System.Data.Entity.DbSet<LibrarySystem.Web.Models.Owner> Owners { get; set; }
     }
 }

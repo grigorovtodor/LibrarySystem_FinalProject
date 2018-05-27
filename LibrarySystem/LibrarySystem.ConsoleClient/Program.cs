@@ -23,14 +23,14 @@ namespace LibrarySystem.ConsoleClient
             var authorRepo = new AuthorRepository();
             var ownerRepo = new OwnerRepository();
 
-            var bookUpdate3 = bookRepo.Read(3);
-            var bookUpdate4 = bookRepo.Read(4);
+            //var bookUpdate3 = bookRepo.Read(3);
+            //var bookUpdate4 = bookRepo.Read(4);
 
-            bookUpdate3.isDeleted = false;
-            bookUpdate4.isDeleted = false;
+            //bookUpdate3.isDeleted = false;
+            //bookUpdate4.isDeleted = false;
 
-            bookRepo.Update(bookUpdate3);
-            bookRepo.Update(bookUpdate4);
+            //bookRepo.Update(bookUpdate3);
+            //bookRepo.Update(bookUpdate4);
 
             //var owner1 = new OwnerBusiness();
             //owner1.Name = "Alex Todorv";
@@ -40,7 +40,7 @@ namespace LibrarySystem.ConsoleClient
             //owner1.UniqueIdNumber = "9406257845";
             //owner1.isDeleted = false;
 
-            //var book1 = new BookBusiness { Name = "Pod Igoto", ISBN = 122445667, countPages = 230, Author = new AuthorBusiness { Name = "Ivan Vazov", Gender = 0, isDeleted = false }, Owner = new OwnerBusiness { Name = "Pesho", PhoneNumber = "0885123456", Email = "pesho@yahoo.com" } };
+            var book1 = new BookBusiness { Name = "Test book", ISBN = 122445667, countPages = 120, AuthorId = 12, OwnerId = 4 };
 
             //var author1 = new AuthorBusiness();
             //author1.Name = "Hristo Botev";
@@ -50,7 +50,7 @@ namespace LibrarySystem.ConsoleClient
             //var book3 = new BookBusiness { Name = "Pod Igoto", ISBN = 122445667, countPages = 230, Author = author1, Owner = new OwnerBusiness { Name = "Gosho Peshov", PhoneNumber = "08859494616", Email = "gosheto@abv.bg" } };
 
 
-            //bookRepo.Create(book1);
+            bookRepo.Create(book1);
             //authorRepo.Create(author1);
             //bookRepo.Create(book3);
             //ownerRepo.Create(owner1);

@@ -1,15 +1,12 @@
-﻿using System;
+﻿using LibrarySystem.BusinessObjects;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using LibrarySystem.BusinessObjects;
-using LibrarySystem.DatabaseEntity;
+using System.Web;
 
-
-namespace LibrarySystem.DataAccessLayer
+namespace LibrarySystem.Web.Models
 {
-    public static class Mapping
+    public static class MappingWeb
     {
         public static BookBusiness ConvertToBusinessEntity(Book book)
         {
@@ -19,14 +16,14 @@ namespace LibrarySystem.DataAccessLayer
             businessObject.ISBN = book.ISBN;
             businessObject.countPages = book.countPages;
             businessObject.datePublished = (DateTime)book.datePublished;
-            businessObject.AuthorId = book.AuthorId; //Mapping.ConvertToBusinessEntity(book.Author);
-            businessObject.OwnerId = book.OwnerId; //Mapping.ConvertToBusinessEntity(book.Owner);
+            businessObject.AuthorId = book.AuthorId; //MappingWeb.ConvertToBusinessEntity(book.Author);
+            businessObject.OwnerId = book.OwnerId; //MappingWeb.ConvertToBusinessEntity(book.Owner);
             businessObject.isDeleted = book.isDeleted;
 
             return businessObject;
         }
 
-        public static Book ConvertToDataEntity(BookBusiness book)
+        public static Book ConvertToWebEntity(BookBusiness book)
         {
             var dataObject = new Book();
             dataObject.Id = book.Id;
@@ -34,8 +31,8 @@ namespace LibrarySystem.DataAccessLayer
             dataObject.ISBN = book.ISBN;
             dataObject.countPages = book.countPages;
             dataObject.datePublished = (DateTime)book.datePublished;
-            dataObject.AuthorId = book.AuthorId; //Mapping.ConvertToDataEntity(book.Author);
-            dataObject.OwnerId = book.OwnerId; //Mapping.ConvertToDataEntity(book.Owner);
+            dataObject.AuthorId = book.AuthorId; //MappingWeb.ConvertToWebEntity(book.Author);
+            dataObject.OwnerId = book.OwnerId; //MappingWeb.ConvertToWebEntity(book.Owner);
             dataObject.isDeleted = book.isDeleted;
 
             return dataObject;
@@ -52,13 +49,13 @@ namespace LibrarySystem.DataAccessLayer
             {
                 businessObject.Birthdate = (DateTime)author.Birthdate;
             }
-            
+
             businessObject.isDeleted = author.isDeleted;
 
             return businessObject;
         }
 
-        public static Author ConvertToDataEntity(AuthorBusiness author)
+        public static Author ConvertToWebEntity(AuthorBusiness author)
         {
             var dataObject = new Author();
             dataObject.Id = author.Id;
@@ -68,7 +65,7 @@ namespace LibrarySystem.DataAccessLayer
             {
                 dataObject.Birthdate = (DateTime)author.Birthdate;
             }
-            
+
             dataObject.isDeleted = author.isDeleted;
 
             return dataObject;
@@ -77,6 +74,7 @@ namespace LibrarySystem.DataAccessLayer
         public static OwnerBusiness ConvertToBusinessEntity(Owner owner)
         {
             var businessObject = new OwnerBusiness();
+
             businessObject.Id = owner.Id;
             businessObject.Name = owner.Name;
             businessObject.Gender = owner.Gender;
@@ -85,13 +83,14 @@ namespace LibrarySystem.DataAccessLayer
             businessObject.UniqueIdNumber = owner.UniqueIdNumber;
             businessObject.isDeleted = owner.isDeleted;
 
-
             return businessObject;
+
         }
 
-        public static Owner ConvertToDataEntity(OwnerBusiness owner)
+        public static Owner ConvertToWebEntity(OwnerBusiness owner)
         {
             var dataObject = new Owner();
+
             dataObject.Id = owner.Id;
             dataObject.Name = owner.Name;
             dataObject.Gender = owner.Gender;

@@ -37,7 +37,7 @@ namespace LibrarySystem.DataAccessLayer
 
         public void Delete(BookBusiness item)
         {
-            Delete(item);
+            Delete(item.Id);
         }
 
         public BookBusiness Read(int id)
