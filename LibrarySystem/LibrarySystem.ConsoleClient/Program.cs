@@ -23,13 +23,22 @@ namespace LibrarySystem.ConsoleClient
             var authorRepo = new AuthorRepository();
             var ownerRepo = new OwnerRepository();
 
-            var owner1 = new OwnerBusiness();
-            owner1.Name = "Alex Todorv";
-            owner1.Gender = 0;
-            owner1.Email = "alex@mail.bg";
-            owner1.Address = "Sofia, Druzhba 2";
-            owner1.UniqueIdNumber = "9406257845";
-            owner1.isDeleted = false;
+            var bookUpdate3 = bookRepo.Read(3);
+            var bookUpdate4 = bookRepo.Read(4);
+
+            bookUpdate3.isDeleted = false;
+            bookUpdate4.isDeleted = false;
+
+            bookRepo.Update(bookUpdate3);
+            bookRepo.Update(bookUpdate4);
+
+            //var owner1 = new OwnerBusiness();
+            //owner1.Name = "Alex Todorv";
+            //owner1.Gender = 0;
+            //owner1.Email = "alex@mail.bg";
+            //owner1.Address = "Sofia, Druzhba 2";
+            //owner1.UniqueIdNumber = "9406257845";
+            //owner1.isDeleted = false;
 
             //var book1 = new BookBusiness { Name = "Pod Igoto", ISBN = 122445667, countPages = 230, Author = new AuthorBusiness { Name = "Ivan Vazov", Gender = 0, isDeleted = false }, Owner = new OwnerBusiness { Name = "Pesho", PhoneNumber = "0885123456", Email = "pesho@yahoo.com" } };
 
@@ -44,7 +53,7 @@ namespace LibrarySystem.ConsoleClient
             //bookRepo.Create(book1);
             //authorRepo.Create(author1);
             //bookRepo.Create(book3);
-            ownerRepo.Create(owner1);
+            //ownerRepo.Create(owner1);
 
         }
     }

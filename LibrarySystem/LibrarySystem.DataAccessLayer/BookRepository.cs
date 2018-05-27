@@ -77,6 +77,7 @@ namespace LibrarySystem.DataAccessLayer
                 dbBook.ISBN = item.ISBN;
                 dbBook.countPages = item.countPages;
                 dbBook.datePublished = item.datePublished;
+                dbBook.isDeleted = item.isDeleted;
                 dbBook.Author = Mapping.ConvertToDataEntity(item.Author);
                 dbBook.Owner = Mapping.ConvertToDataEntity(item.Owner);
 
