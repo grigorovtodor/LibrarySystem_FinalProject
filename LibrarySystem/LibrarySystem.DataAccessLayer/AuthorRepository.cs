@@ -77,12 +77,11 @@ namespace LibrarySystem.DataAccessLayer
                 dbAuthor.Birthdate = item.Birthdate;
                 dbAuthor.Gender = item.Gender;
                 dbAuthor.isDeleted = item.isDeleted;
-                //dbAuthor.Book = new HashSet<Book>();
 
-                //foreach (var book in item.Book)
-                //{
-                //    dbAuthor.Book.Add(Mapping.ConvertToDataEntity(book));
-                //}
+                if (dbAuthor.isDeleted == null)
+                {
+                    dbAuthor.isDeleted = false;
+                }
                 
                 database.SaveChanges();
             }

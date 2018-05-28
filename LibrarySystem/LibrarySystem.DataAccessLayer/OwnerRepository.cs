@@ -80,6 +80,11 @@ namespace LibrarySystem.DataAccessLayer
                 dbOwner.UniqueIdNumber = item.UniqueIdNumber;
                 dbOwner.Gender = item.Gender;
                 dbOwner.isDeleted = item.isDeleted;
+
+                if (dbOwner.isDeleted == null)
+                {
+                    dbOwner.isDeleted = false;
+                }
                 
                 database.SaveChanges();
             }

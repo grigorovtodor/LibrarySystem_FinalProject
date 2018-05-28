@@ -71,6 +71,8 @@ namespace LibrarySystem.DataAccessLayer
         {
             using (var database = new LibrarySystemDbEntities2())
             {
+                AuthorRepository authorRepo = new AuthorRepository();
+                OwnerRepository ownerRepo = new OwnerRepository();
                 var dbBook = database.Book.FirstOrDefault(b => b.Id == item.Id);
 
                 dbBook.Name = item.Name;
@@ -78,8 +80,12 @@ namespace LibrarySystem.DataAccessLayer
                 dbBook.countPages = item.countPages;
                 dbBook.datePublished = item.datePublished;
                 dbBook.isDeleted = item.isDeleted;
-                dbBook.Author = Mapping.ConvertToDataEntity(item.Author);
-                dbBook.Owner = Mapping.ConvertToDataEntity(item.Owner);
+                if (dbBook.isDeleted == null)
+                {
+                    dbBook.isDeleted = false;
+                }
+                dbBook.Author = Mapping.ConvertToDataEntity(authorRepo.Read(item.AuthorId));
+                dbBook.Owner = Mapping.ConvertToDataEntity(ownerRepo.Read(item.OwnerId));
 
                 database.SaveChanges();
             }

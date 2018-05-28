@@ -123,37 +123,5 @@ namespace LibrarySystem.Web.Controllers
             _ownerRepo.Delete(MappingWeb.ConvertToBusinessEntity(owner));
             return RedirectToAction("Index");
         }
-
-        public ActionResult Hire(int id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Owner owner = MappingWeb.ConvertToWebEntity(_ownerRepo.Read(id));
-            if (owner == null)
-            {
-                return HttpNotFound();
-            }
-
-            ViewBag.BooksToHire = new SelectList(_bookRepo.ReadAll(), "Id", "Name");
-            return View(owner);
-        }
-
-        // POST: Owners/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Hire([Bind(Include = "Id,Name,UniqueIdNumber,Address,Gender,PhoneNumber,Email,isDeleted")] Owner owner)
-        {
-            if (ModelState.IsValid)
-            {
-                _ownerRepo.Update(MappingWeb.ConvertToBusinessEntity(owner)); // = EntityState.Modified;
-                return RedirectToAction("Index");
-            }
-            return View(owner);
-        }
-
     }
 }

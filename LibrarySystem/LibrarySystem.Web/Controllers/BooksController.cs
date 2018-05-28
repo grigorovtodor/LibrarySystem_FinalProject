@@ -74,7 +74,7 @@ namespace LibrarySystem.Web.Controllers
             if (ModelState.IsValid)
             {
                 book.isDeleted = false;
-                book.OwnerId = 4;
+                book.OwnerId = 17;
                 book.Author = MappingWeb.ConvertToWebEntity(_authorRepo.Read(book.AuthorId));
                 book.Owner = MappingWeb.ConvertToWebEntity(_ownerRepo.Read(book.OwnerId));
                 _bookRepo.Create(MappingWeb.ConvertToBusinessEntity(book));
@@ -96,12 +96,14 @@ namespace LibrarySystem.Web.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Book book = MappingWeb.ConvertToWebEntity(_bookRepo.Read(id));
+            book.Owner = MappingWeb.ConvertToWebEntity(_ownerRepo.Read(book.OwnerId));
+
             if (book == null)
             {
                 return HttpNotFound();
             }
             ViewBag.AuthorId = new SelectList(_authorRepo.ReadAll(), "Id", "Name", book.AuthorId);
-            ViewBag.OwnerId = new SelectList(_ownerRepo.ReadAll(), "Id", "Name", book.OwnerId);
+            //ViewBag.OwnerId = new SelectList(_ownerRepo.ReadAll(), "Id", "Name", book.OwnerId);
             return View(book);
         }
 
@@ -110,10 +112,15 @@ namespace LibrarySystem.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,ISBN,countPages,datePublished,AuthorId,OwnerId,isDeleted")] Book book)
+        public ActionResult Edit([Bind(Include = "Id,Name,ISBN,countPages,datePublished,AuthorId")] Book book)
         {
             if (ModelState.IsValid)
             {
+                book.Author = MappingWeb.ConvertToWebEntity(_authorRepo.Read(book.AuthorId));
+                var ownerIdFromRepo = MappingWeb.ConvertToWebEntity(_bookRepo.Read(book.Id)).OwnerId;
+                book.isDeleted = false;
+                book.OwnerId = ownerIdFromRepo;
+                book.Owner = MappingWeb.ConvertToWebEntity(_ownerRepo.Read(ownerIdFromRepo));
                 _bookRepo.Update(MappingWeb.ConvertToBusinessEntity(book));
                 return RedirectToAction("Index");
             }
@@ -150,5 +157,46 @@ namespace LibrarySystem.Web.Controllers
             return RedirectToAction("Index");
         }
 
+        public ActionResult Hire(int id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Book book = MappingWeb.ConvertToWebEntity(_bookRepo.Read(id));
+            if (book == null)
+            {
+                return HttpNotFound();
+            }
+            //ViewBag.AuthorId = new SelectList(_authorRepo.ReadAll(), "Id", "Name", book.AuthorId);
+            ViewBag.OwnerId = new SelectList(_ownerRepo.ReadAll(), "Id", "Name", book.OwnerId);
+            return View(book);
+        }
+
+        // POST: Books/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Hire([Bind(Include = "Id,Name,ISBN,countPages,datePublished,AuthorId,OwnerId,isDeleted")] Book book)
+        {
+            if (ModelState.IsValid)
+            {
+                book.Name = MappingWeb.ConvertToWebEntity(_bookRepo.Read(book.Id)).Name;
+                book.ISBN = MappingWeb.ConvertToWebEntity(_bookRepo.Read(book.Id)).ISBN;
+                book.countPages = MappingWeb.ConvertToWebEntity(_bookRepo.Read(book.Id)).countPages;
+                book.datePublished = MappingWeb.ConvertToWebEntity(_bookRepo.Read(book.Id)).datePublished;
+                book.Owner = MappingWeb.ConvertToWebEntity(_ownerRepo.Read(book.OwnerId));
+                var authorIdFromRepo = MappingWeb.ConvertToWebEntity(_bookRepo.Read(book.Id)).AuthorId;
+                book.isDeleted = false;
+                book.AuthorId = authorIdFromRepo;
+                book.Author = MappingWeb.ConvertToWebEntity(_authorRepo.Read(authorIdFromRepo));
+                _bookRepo.Update(MappingWeb.ConvertToBusinessEntity(book));
+                return RedirectToAction("Index");
+            }
+            //ViewBag.AuthorId = new SelectList(_authorRepo.ReadAll(), "Id", "Name", book.AuthorId);
+            ViewBag.OwnerId = new SelectList(_ownerRepo.ReadAll(), "Id", "Name", book.OwnerId);
+            return View(book);
+        }
     }
 }
